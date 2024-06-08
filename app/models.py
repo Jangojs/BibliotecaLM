@@ -1,5 +1,3 @@
-# app/models.py
-
 from . import db  # Importa el objeto db de tu aplicación
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)

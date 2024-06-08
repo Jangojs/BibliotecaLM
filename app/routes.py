@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    book = Book.query.all()
+    books = Book.query.all()
     return render_template('index.html', Book=Book)
 
 @main.route('/list_books')
