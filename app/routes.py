@@ -1,19 +1,17 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from .models import Book, db
 from flask_restful import Resource, reqparse
-from .models import Book, db
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
     books = Book.query.all()
-    return render_template('index.html', Book=Book)
+    return render_template('index.html', books=books)
 
 @main.route('/list_books')
 def list_books():
-    # Lógica para obtener y mostrar todos los libros
-    return render_template('list_books.html', Book=Book)
+    return render_template('list_books.html', books=Book.query.all())
 
 @main.route('/add', methods=['GET', 'POST'])
 def add_book():
@@ -48,6 +46,23 @@ def delete_book(id):
     return redirect(url_for('main.index'))
 
 
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        query = request.form['query'].strip()  # Asegúrate de limpiar y normalizar el input
+        if query:
+            # Filtra libros que contengan el query en el título, autor, género o año
+            books = Book.query.filter(
+                (Book.title.ilike(f'%{query}%')) |  # Usando ilike para búsqueda case-insensitive en PostgreSQL
+                (Book.author.ilike(f'%{query}%')) |
+                (Book.genre.ilike(f'%{query}%')) |
+                (Book.year.ilike(f'%{query}%'))    # Si 'year' es un campo numérico, asegúrate de que coincida con el tipo de datos
+            ).all()
+            return render_template('search_results.html', books=books, query=query)
+        else:
+            # Si no se proporciona ningún término de búsqueda
+            return render_template('search_results.html', books=[], query=query)
+    return render_template('search.html')
 
 class BookListResource(Resource):
     def get(self):
@@ -95,12 +110,3 @@ class BookResource(Resource):
         db.session.delete(book)
         db.session.commit()
         return {'message': 'Book deleted'}
-
-from flask import request
-
-@main.route('/search')
-def search():
-    query = request.args.get('query')
-    # Realizar la búsqueda en la base de datos según el query
-    # books = Book.query.filter(...).all() 
-    return render_template('search_results.html', Book=Book, query=query)

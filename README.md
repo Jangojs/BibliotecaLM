@@ -10,6 +10,7 @@ Esta es una aplicación web para gestionar una biblioteca de libros. Permite a l
 - Flask-SQLAlchemy
 - Flask-RESTful
 - virtualenv
+-SQLyte
 
 ## Instalación
 1. Clona este repositorio:

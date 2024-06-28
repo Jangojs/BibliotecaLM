@@ -1,11 +1,9 @@
-import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-class Config:
-    # Utiliza una clave secreta fuerte para la seguridad de la aplicación
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biblioteca.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Especifica la ruta de la base de datos SQLite
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///biblioteca.db'
+db = SQLAlchemy(app)
 
-    # Deshabilita el seguimiento de modificaciones para evitar advertencias
-    SQLALCHEMY_TRACK_MODIFICATIONS = False

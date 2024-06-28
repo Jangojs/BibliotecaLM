@@ -13,7 +13,7 @@
       <li>
         {{ book.title }} by {{ book.author }}
         <a href="{{ url_for('main.update_book', id=book.id) }}">Editar</a>
-        <form action="{{ url_for('main.delete', id=book.id) }}" method="post" style="display:inline;">
+        <form action="{{ url_for('main.delete_book', id=book.id) }}" method="post" style="display:inline;">
           <button type="submit">Eliminar</button>
         </form>
       </li>
